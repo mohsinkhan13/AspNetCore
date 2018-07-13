@@ -2,33 +2,28 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CityInfo.Api.Controllers
 {
     [Route("api/Cities")]
     public class CitiesController : Controller
     {
-        List<City> _cities = new List<City>
-            {
-                new City{Id=1, Name="London"  , Description = "Some description"},
-                new City{Id=2, Name="New York", Description = "Some description"},
-                new City{Id=3, Name="Mumbai"  , Description = "Some description"},
-                new City{Id=4, Name="Prague"  , Description = "Some description"}
-            };
+        private CityDataStore _cityDataStore = new CityDataStore();
 
-        public ActionResult GetCities()
+        public async Task<IActionResult> GetCities()
         {
-            return new JsonResult(_cities);
+            return Ok(_cityDataStore.GetAllCities());
         }
 
         [Route("{id}")]
-        public ActionResult GetCity(int id)
+        public async Task<IActionResult> GetCity(int id)
         {
-            var result = _cities.FirstOrDefault(x => x.Id == id);
+            var result = _cityDataStore. GetAllCities().FirstOrDefault(x => x.Id == id);
             if (result == null)
-                return new NotFoundResult();
+                return NotFound();
 
-            return new JsonResult(result);
+            return Ok(result);
         }
     }
 }
